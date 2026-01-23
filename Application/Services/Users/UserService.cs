@@ -24,7 +24,8 @@ namespace BakeryApi.Application.Services.Users
         {
             //send pasword to salting
             var passwordHash = CreatePasswordWithHash(user.password);
-
+       
+       
             user.password = passwordHash.PasswordHash;
             user.salt = passwordHash.salt;
             _context.User.Add(user);
