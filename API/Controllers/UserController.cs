@@ -70,9 +70,19 @@ namespace BakeryApi.API.Controllers
 
 
         //user Login
-        [HttpPost("{username}")]
-        public async Task<ActionResult<User>> UserLogin([FromBody] User user){
-            return user;
+        [HttpPost("login")]
+        public async Task<ActionResult<LoginResponseDto>> UserLogin([FromBody] LoginRequest request){
+            
+           if(request == null)
+           {
+         
+         return BadRequest("User Name and Password Required");
+          
+           }
+
+           var loginUser = await _userService.LoginAsync(request);
+            
+            return loginUser;
         }
     }
 }

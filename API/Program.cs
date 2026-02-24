@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Identity;  // add this at top
 using BakeryApi.Application.Services.Users;
 using Microsoft.EntityFrameworkCore;
 using BakeryApi.Infrastructure.Data;
+using BakeryApi.Domain.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +25,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 // Enable console logging
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using BakeryApi.Domain.Entities;
 using BakeryApi.Infrastructure.Data;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace BakeryApi.Application.Services.Users
@@ -13,10 +14,12 @@ namespace BakeryApi.Application.Services.Users
         private readonly BakeryDbContext _context;
         private readonly List<User> _user = new List<User>();
         private byte saltPassword;
+        private IPasswordHasher<User> _passwordhasher;
 
-        public UserService(BakeryDbContext context)
+        public UserService(BakeryDbContext context, IPasswordHasher<User> passwordHasher)
         {
             _context = context;
+            _passwordhasher = passwordHasher;
         }
 
         //Register new user
@@ -24,8 +27,7 @@ namespace BakeryApi.Application.Services.Users
         {
             //send pasword to salting
             var passwordHash = CreatePasswordWithHash(user.password);
-       
-       
+
             user.password = passwordHash.PasswordHash;
             user.salt = passwordHash.salt;
             _context.User.Add(user);
@@ -65,9 +67,30 @@ namespace BakeryApi.Application.Services.Users
         }
 
         //user Login
-        public async Task<User> Login(User user)
+        public async Task<LoginResponseDto?> LoginAsync(LoginRequest request)
         {
-            return user;
+
+            //check the user
+            var isUser = await _context.User.FirstOrDefaultAsync(u =>
+                u.user_name == request.user_name
+            );
+
+            if (isUser == null)
+            {
+                return new LoginResponseDto { ErrorMessage = "User name or password is incorrect" };
+            }
+
+            //verfy the passwords
+            var verifyPassword = _passwordhasher.VerifyHashedPassword(
+                isUser,
+                isUser.password,
+                isUser.salt,
+                request.password
+            );
+            if (verifyPassword == PasswordVerificationResult.Failed)
+                return null; // wrong password
+
+            return new LoginResponseDto { user_name = isUser.user_name };
         }
     }
 }

@@ -318,3 +318,10 @@
 /Users/dhanushkabandara/Code/Bakery_1.0/Code/BakeryInfoDotBackend/BakeryAPI/obj/Debug/net8.0/BakeryAPI.pdb
 /Users/dhanushkabandara/Code/Bakery_1.0/Code/BakeryInfoDotBackend/BakeryAPI/obj/Debug/net8.0/BakeryAPI.genruntimeconfig.cache
 /Users/dhanushkabandara/Code/Bakery_1.0/Code/BakeryInfoDotBackend/BakeryAPI/obj/Debug/net8.0/ref/BakeryAPI.dll
+/Users/dhanushkabandara/Code/Bakery_1.0/Code/BakeryInfoDotBackend/BakeryAPI/bin/Debug/net8.0/Microsoft.Extensions.Diagnostics.Abstractions.dll
+/Users/dhanushkabandara/Code/Bakery_1.0/Code/BakeryInfoDotBackend/BakeryAPI/bin/Debug/net8.0/Microsoft.Extensions.Hosting.Abstractions.dll
+/Users/dhanushkabandara/Code/Bakery_1.0/Code/BakeryInfoDotBackend/BakeryAPI/bin/Debug/net8.0/Microsoft.Extensions.ObjectPool.dll
+/Users/dhanushkabandara/Code/Bakery_1.0/Code/BakeryInfoDotBackend/BakeryAPI/bin/Debug/net8.0/Microsoft.Extensions.WebEncoders.dll
+/Users/dhanushkabandara/Code/Bakery_1.0/Code/BakeryInfoDotBackend/BakeryAPI/bin/Debug/net8.0/System.Security.Cryptography.Pkcs.dll
+/Users/dhanushkabandara/Code/Bakery_1.0/Code/BakeryInfoDotBackend/BakeryAPI/bin/Debug/net8.0/System.Security.Cryptography.Xml.dll
+/Users/dhanushkabandara/Code/Bakery_1.0/Code/BakeryInfoDotBackend/BakeryAPI/bin/Debug/net8.0/runtimes/win/lib/net8.0/System.Security.Cryptography.Pkcs.dll
