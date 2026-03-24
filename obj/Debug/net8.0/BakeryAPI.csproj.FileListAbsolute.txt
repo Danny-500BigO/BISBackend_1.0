@@ -325,3 +325,11 @@
 /Users/dhanushkabandara/Code/Bakery_1.0/Code/BakeryInfoDotBackend/BakeryAPI/bin/Debug/net8.0/System.Security.Cryptography.Pkcs.dll
 /Users/dhanushkabandara/Code/Bakery_1.0/Code/BakeryInfoDotBackend/BakeryAPI/bin/Debug/net8.0/System.Security.Cryptography.Xml.dll
 /Users/dhanushkabandara/Code/Bakery_1.0/Code/BakeryInfoDotBackend/BakeryAPI/bin/Debug/net8.0/runtimes/win/lib/net8.0/System.Security.Cryptography.Pkcs.dll
+/Users/dhanushkabandara/Code/Bakery_1.0/Code/BakeryInfoDotBackend/BakeryAPI/bin/Debug/net8.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+/Users/dhanushkabandara/Code/Bakery_1.0/Code/BakeryInfoDotBackend/BakeryAPI/bin/Debug/net8.0/Microsoft.IdentityModel.Abstractions.dll
+/Users/dhanushkabandara/Code/Bakery_1.0/Code/BakeryInfoDotBackend/BakeryAPI/bin/Debug/net8.0/Microsoft.IdentityModel.JsonWebTokens.dll
+/Users/dhanushkabandara/Code/Bakery_1.0/Code/BakeryInfoDotBackend/BakeryAPI/bin/Debug/net8.0/Microsoft.IdentityModel.Logging.dll
+/Users/dhanushkabandara/Code/Bakery_1.0/Code/BakeryInfoDotBackend/BakeryAPI/bin/Debug/net8.0/Microsoft.IdentityModel.Protocols.dll
+/Users/dhanushkabandara/Code/Bakery_1.0/Code/BakeryInfoDotBackend/BakeryAPI/bin/Debug/net8.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+/Users/dhanushkabandara/Code/Bakery_1.0/Code/BakeryInfoDotBackend/BakeryAPI/bin/Debug/net8.0/Microsoft.IdentityModel.Tokens.dll
+/Users/dhanushkabandara/Code/Bakery_1.0/Code/BakeryInfoDotBackend/BakeryAPI/bin/Debug/net8.0/System.IdentityModel.Tokens.Jwt.dll

@@ -15,48 +15,42 @@ namespace BakeryApi.Application.Services.Users
         private readonly List<User> _user = new List<User>();
         private byte saltPassword;
         private IPasswordHasher<User> _passwordhasher;
+        private readonly JwtService _jwtService;
 
-        public UserService(BakeryDbContext context, IPasswordHasher<User> passwordHasher)
+        public UserService(BakeryDbContext context, IPasswordHasher<User> passwordHasher ,JwtService jwtService)
         {
             _context = context;
             _passwordhasher = passwordHasher;
+            _jwtService = jwtService;
         }
 
         //Register new user
         public async Task<User> AddUserAsync(User user)
         {
             //send pasword to salting
-            var passwordHash = CreatePasswordWithHash(user.password);
+            var passwordHash = CreatePasswordWithHash(user, user.password);
 
-            user.password = passwordHash.PasswordHash;
-            user.salt = passwordHash.salt;
+             user.password = passwordHash;
             _context.User.Add(user);
             await _context.SaveChangesAsync();
             return await Task.FromResult(user);
         }
 
         //password hashing and salt
-        public (string PasswordHash, string salt) CreatePasswordWithHash(string password)
+        public string CreatePasswordWithHash(User user, string password)
         {
-            //create salt(1)
-            var salt = new byte[16];
-            using (var rng = RandomNumberGenerator.Create())
-            {
-                rng.GetBytes(salt);
-            }
-
-            //creat Hash(2)
-            var hash = Convert.ToBase64String(
-                KeyDerivation.Pbkdf2(
-                    password: password,
-                    salt: salt,
-                    prf: KeyDerivationPrf.HMACSHA256,
-                    iterationCount: 1000,
-                    numBytesRequested: 256 / 8
-                )
+            
+            //password create with salt
+            var newPasswordandSalt = _passwordhasher.HashPassword(
+                user,
+                password
             );
 
-            return (hash, Convert.ToBase64String(salt));
+            Console.WriteLine(newPasswordandSalt);
+
+            return newPasswordandSalt;
+            
+    
         }
 
         //view user byId
@@ -84,13 +78,17 @@ namespace BakeryApi.Application.Services.Users
             var verifyPassword = _passwordhasher.VerifyHashedPassword(
                 isUser,
                 isUser.password,
-                isUser.salt,
                 request.password
             );
             if (verifyPassword == PasswordVerificationResult.Failed)
                 return null; // wrong password
 
-            return new LoginResponseDto { user_name = isUser.user_name };
+            var token = _jwtService.GenerateToken(isUser);
+            return new LoginResponseDto { user_name = isUser.user_name,  SuccessMessage = "Login Succefull" ,
+            
+            Token = token
+
+             };
         }
     }
 }
