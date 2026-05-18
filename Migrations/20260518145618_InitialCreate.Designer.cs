@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BakeryAPI.Migrations
 {
     [DbContext(typeof(BakeryDbContext))]
-    [Migration("20250907021719_saltColumn")]
-    partial class saltColumn
+    [Migration("20260518145618_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,8 +36,12 @@ namespace BakeryAPI.Migrations
                     b.Property<DateTime>("created_at")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime>("date_of_birth")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly>("date_of_birth")
+                        .HasColumnType("date");
+
+                    b.Property<string>("email")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("first_name")
                         .IsRequired()
@@ -54,10 +58,6 @@ namespace BakeryAPI.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("salt")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<DateTime>("updated_at")
                         .HasColumnType("timestamp with time zone");
 
@@ -66,6 +66,9 @@ namespace BakeryAPI.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("user_id");
+
+                    b.HasIndex("email")
+                        .IsUnique();
 
                     b.ToTable("users");
                 });
