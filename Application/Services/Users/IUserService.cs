@@ -9,6 +9,8 @@ namespace BakeryApi.Application.Services.Users
     {
         Task<User> AddUserAsync(User user);
         Task<User> GetUserByIdAsync(int id);
+        Task<LoginResponseDto?> LoginAsync(LoginRequest request);
+
     }
 
 }

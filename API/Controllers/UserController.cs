@@ -43,6 +43,7 @@ namespace BakeryApi.API.Controllers
                     StatusCode = 201,
                     Username = createdUser.user_name,
                     IsActive = createdUser.is_active,
+                    ResponseMessage = "Successfully Created",
                 };
 
                 return CreatedAtAction(nameof(GetUser), new { id = createdUser.user_id }, response);
@@ -68,11 +69,32 @@ namespace BakeryApi.API.Controllers
             return Ok(user);
         }
 
-
         //user Login
-        [HttpPost("{username}")]
-        public async Task<ActionResult<User>> UserLogin([FromBody] User user){
-            return user;
+        [HttpPost("login")]
+        public async Task<ActionResult<LoginResponseDto>> UserLogin([FromBody] LoginRequest request)
+        {
+            try
+            {
+                if (request == null)
+                {
+                    return BadRequest("User Name and Password Required");
+                }
+
+                var loginUser = await _userService.LoginAsync(request);
+                var response = new userCreatedResponse
+                {
+                    StatusCode = 200,
+                    Username = loginUser.user_name,
+                    ResponseMessage = "Login Succesfull",
+                };
+
+                return loginUser;
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching item");
+                return StatusCode(500, "Internal Server Error");
+            }
         }
     }
 }

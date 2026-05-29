@@ -9,5 +9,10 @@ namespace BakeryApi.Infrastructure.Data
             : base(options) { }
 
         public DbSet<User> User { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<User>().HasIndex(u => u.email).IsUnique();
+        }
     }
 }
