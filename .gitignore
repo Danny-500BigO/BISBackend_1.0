@@ -1,0 +1,12 @@
+# Build outputs
+bin/
+obj/
+
+# VS Code
+.vscode/
+
+# Certificates
+localhost.pfx
+localhost.key
+localhost.crt
+appsettings.Development.json

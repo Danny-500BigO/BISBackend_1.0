@@ -10,13 +10,13 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 var key = Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"]);
-
 //add dbcontext
 // builder.Services.AddDbContext<BakeryDbContext>(options =>
 //     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
     // services.AddDbContext<BakeryDbContext>(options =>
     // options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+  
     builder.Services.AddDbContext<BakeryDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 

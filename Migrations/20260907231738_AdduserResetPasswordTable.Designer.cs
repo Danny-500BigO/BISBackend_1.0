@@ -3,6 +3,7 @@ using System;
 using BakeryApi.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BakeryAPI.Migrations
 {
     [DbContext(typeof(BakeryDbContext))]
-    partial class BakeryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260907231738_AdduserResetPasswordTable")]
+    partial class AdduserResetPasswordTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,43 +24,6 @@ namespace BakeryAPI.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("BakeryApi.Domain.Entities.ResetPassword", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
-
-                    b.Property<DateOnly>("created_at")
-                        .HasColumnType("date");
-
-                    b.Property<DateOnly>("expired_at")
-                        .HasColumnType("date");
-
-                    b.Property<bool>("is_used")
-                        .HasColumnType("boolean");
-
-                    b.Property<DateTime>("last_reset_timeDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("rate_limit")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("token_hash")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("user_id")
-                        .HasColumnType("integer");
-
-                    b.HasKey("id");
-
-                    b.HasIndex("user_id");
-
-                    b.ToTable("ResetPassword");
-                });
 
             modelBuilder.Entity("BakeryApi.Domain.Entities.User", b =>
                 {
@@ -105,22 +71,6 @@ namespace BakeryAPI.Migrations
                         .IsUnique();
 
                     b.ToTable("users");
-                });
-
-            modelBuilder.Entity("BakeryApi.Domain.Entities.ResetPassword", b =>
-                {
-                    b.HasOne("BakeryApi.Domain.Entities.User", "user")
-                        .WithMany("resetPasswords")
-                        .HasForeignKey("user_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("user");
-                });
-
-            modelBuilder.Entity("BakeryApi.Domain.Entities.User", b =>
-                {
-                    b.Navigation("resetPasswords");
                 });
 #pragma warning restore 612, 618
         }

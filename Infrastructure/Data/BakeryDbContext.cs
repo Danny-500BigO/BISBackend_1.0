@@ -5,10 +5,14 @@ namespace BakeryApi.Infrastructure.Data
 {
     public class BakeryDbContext : DbContext
     {
+
         public BakeryDbContext(DbContextOptions<BakeryDbContext> options)
-            : base(options) { }
+: base(options)
+        {
+        }
 
         public DbSet<User> User { get; set; }
+        public DbSet<ResetPassword> ResetPassword {get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

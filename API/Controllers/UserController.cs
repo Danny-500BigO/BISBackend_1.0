@@ -1,7 +1,9 @@
 using BakeryApi.Application.Services.Users;
 using BakeryApi.Domain.Entities;
 using BakeryApi.Infrastructure.Data;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
+using Mysqlx.Session;
 
 namespace BakeryApi.API.Controllers
 {
@@ -90,11 +92,28 @@ namespace BakeryApi.API.Controllers
 
                 return loginUser;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError(ex, "Error fetching item");
                 return StatusCode(500, "Internal Server Error");
             }
         }
+
+        [HttpPost("email")]
+        public async Task<ActionResult<ResetPasswordResponseDto>> ResetPassword(ResetPasswordRequestDto email)
+        {
+               if(email != null)
+            {
+
+                var resetPassword =  await _userService.ResetPasswordAsync(email);
+                
+            } else
+            {
+                 return  BadRequest("please enter reset passwords");
+            }
+                
+                return null;
+        }
+
     }
 }

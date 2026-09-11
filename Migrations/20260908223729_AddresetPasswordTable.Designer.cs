@@ -3,6 +3,7 @@ using System;
 using BakeryApi.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BakeryAPI.Migrations
 {
     [DbContext(typeof(BakeryDbContext))]
-    partial class BakeryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260908223729_AddresetPasswordTable")]
+    partial class AddresetPasswordTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -53,8 +56,6 @@ namespace BakeryAPI.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("id");
-
-                    b.HasIndex("user_id");
 
                     b.ToTable("ResetPassword");
                 });
@@ -105,22 +106,6 @@ namespace BakeryAPI.Migrations
                         .IsUnique();
 
                     b.ToTable("users");
-                });
-
-            modelBuilder.Entity("BakeryApi.Domain.Entities.ResetPassword", b =>
-                {
-                    b.HasOne("BakeryApi.Domain.Entities.User", "user")
-                        .WithMany("resetPasswords")
-                        .HasForeignKey("user_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("user");
-                });
-
-            modelBuilder.Entity("BakeryApi.Domain.Entities.User", b =>
-                {
-                    b.Navigation("resetPasswords");
                 });
 #pragma warning restore 612, 618
         }

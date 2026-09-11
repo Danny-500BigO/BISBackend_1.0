@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Net.WebSockets;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using BakeryApi.Domain.Entities;
@@ -6,6 +7,7 @@ using BakeryApi.Infrastructure.Data;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace BakeryApi.Application.Services.Users
 {
@@ -89,6 +91,31 @@ namespace BakeryApi.Application.Services.Users
             Token = token
 
              };
+        }
+
+        public async  Task<ResetPasswordResponseDto> ResetPasswordAsync(ResetPasswordRequestDto request){
+
+           
+
+            var isUserExist = await _context.User.FirstOrDefaultAsync(u => u.email == request.email);
+
+            var message = new ResetPasswordResponseDto();
+            if(isUserExist != null)
+            {
+                // var checkResetHistory = await _context.User.FirstOrDefaultAsync(u => u.rate_limit && u.passwordrestedtaeandtime);
+                // if(checkResetHistory.rate_limit > 3)
+                // {
+                //     Console.WriteLine("your password reset limit exceed, please try again");
+                // }
+                // else if(checkResetHistory.passwordrestedtaeandtime < 60min)
+                // {
+                //     Console.WriteLine("please try in another hour, you can reset only one time  in each 4hour");
+                // }
+                Console.WriteLine(message.SuccessMessage = isUserExist.email);
+            }
+            
+            return null;
+            
         }
     }
 }

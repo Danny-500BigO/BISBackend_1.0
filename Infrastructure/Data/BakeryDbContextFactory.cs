@@ -12,7 +12,7 @@ namespace BakeryApi.Infrastructure.Data
             // Load configuration from appsettings.json
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json")
+                .AddJsonFile("appsettings.Development.json", optional: true)
                 .Build();
 
             var connectionString = configuration.GetConnectionString("DefaultConnection");

@@ -19,5 +19,7 @@ namespace BakeryApi.Domain.Entities
         public DateTime created_at { get; set; }
         public DateTime updated_at { get; set; }
         public bool is_active { get; set; }
+
+        public ICollection<ResetPassword> resetPasswords {get ; set;}
     }
 }

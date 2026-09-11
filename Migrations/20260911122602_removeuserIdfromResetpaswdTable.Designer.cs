@@ -3,6 +3,7 @@ using System;
 using BakeryApi.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BakeryAPI.Migrations
 {
     [DbContext(typeof(BakeryDbContext))]
-    partial class BakeryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260911122602_removeuserIdfromResetpaswdTable")]
+    partial class removeuserIdfromResetpaswdTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,14 +48,19 @@ namespace BakeryAPI.Migrations
                     b.Property<int>("rate_limit")
                         .HasColumnType("integer");
 
+                    b.Property<int>("resetPasswordid")
+                        .HasColumnType("integer");
+
                     b.Property<string>("token_hash")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("user_id")
+                    b.Property<int?>("user_id")
                         .HasColumnType("integer");
 
                     b.HasKey("id");
+
+                    b.HasIndex("resetPasswordid");
 
                     b.HasIndex("user_id");
 
@@ -109,13 +117,17 @@ namespace BakeryAPI.Migrations
 
             modelBuilder.Entity("BakeryApi.Domain.Entities.ResetPassword", b =>
                 {
-                    b.HasOne("BakeryApi.Domain.Entities.User", "user")
-                        .WithMany("resetPasswords")
-                        .HasForeignKey("user_id")
+                    b.HasOne("BakeryApi.Domain.Entities.ResetPassword", "resetPassword")
+                        .WithMany()
+                        .HasForeignKey("resetPasswordid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("user");
+                    b.HasOne("BakeryApi.Domain.Entities.User", null)
+                        .WithMany("resetPasswords")
+                        .HasForeignKey("user_id");
+
+                    b.Navigation("resetPassword");
                 });
 
             modelBuilder.Entity("BakeryApi.Domain.Entities.User", b =>
