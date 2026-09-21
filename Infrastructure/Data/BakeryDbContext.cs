@@ -17,6 +17,12 @@ namespace BakeryApi.Infrastructure.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>().HasIndex(u => u.email).IsUnique();
+           
+            modelBuilder.Entity<ResetPassword>()
+                 .HasOne(r => r.user)
+                    .WithMany(u => u.resetPasswords)
+                        .HasForeignKey(r => r.user_id);
+
         }
     }
 }

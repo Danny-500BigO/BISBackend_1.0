@@ -7,8 +7,9 @@ using Mysqlx.Session;
 
 namespace BakeryApi.API.Controllers
 {
-    [Route("api/[controller]")]
+    
     [ApiController]
+    [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -28,7 +29,7 @@ namespace BakeryApi.API.Controllers
 
         //post api/user
         [HttpPost]
-        public async Task<ActionResult<User>> PostUser([FromBody] User user)
+        public async Task<ActionResult<UserResponseDto>> PostUser([FromBody] UserRequestDto user)
         {
             try
             {
@@ -102,17 +103,27 @@ namespace BakeryApi.API.Controllers
         [HttpPost("email")]
         public async Task<ActionResult<ResetPasswordResponseDto>> ResetPassword(ResetPasswordRequestDto email)
         {
-               if(email != null)
+            
+            try
+            {
+                // Console.WriteLine();
+
+                if(email != null)
             {
 
                 var resetPassword =  await _userService.ResetPasswordAsync(email);
                 
-            } else
-            {
+            } 
                  return  BadRequest("please enter reset passwords");
+            }catch(Exception ex)
+            {
+                Console.WriteLine($"ERROR: {ex.Message}");
+        Console.WriteLine($"DETAILS: {ex}");
+                return BadRequest(ex);
             }
                 
-                return null;
+                
+    
         }
 
     }

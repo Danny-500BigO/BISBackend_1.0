@@ -3,6 +3,7 @@ using System;
 using BakeryApi.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BakeryAPI.Migrations
 {
     [DbContext(typeof(BakeryDbContext))]
-    partial class BakeryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260911132347_resetpasswordRateLimit_defaultvalue0")]
+    partial class resetpasswordRateLimit_defaultvalue0
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,11 +33,11 @@ namespace BakeryAPI.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
 
-                    b.Property<DateTime>("created_at")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly>("created_at")
+                        .HasColumnType("date");
 
-                    b.Property<DateTime>("expired_at")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly>("expired_at")
+                        .HasColumnType("date");
 
                     b.Property<bool>("is_used")
                         .HasColumnType("boolean");

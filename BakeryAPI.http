@@ -1,4 +1,4 @@
-@BakeryAPI_HostAddress = http://localhost:5086
+@BakeryAPI_HostAddress = https://localhost:7259
 
 GET {{BakeryAPI_HostAddress}}/weatherforecast/
 Accept: application/json
