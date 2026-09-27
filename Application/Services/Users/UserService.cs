@@ -123,35 +123,82 @@ namespace BakeryApi.Application.Services.Users
         public async Task<ResetPasswordResponseDto> ResetPasswordAsync(ResetPasswordRequestDto request)
         {
 
+            try
+            {
+                var isUserExist = await _context.User.FirstOrDefaultAsync(u => u.email == request.email);
+
+                var message = new ResetPasswordResponseDto();
+                if (isUserExist != null)
+                {
+
+                    var checkResetHistory = await _context.ResetPassword.FirstOrDefaultAsync(u => u.user_id == isUserExist.user_id);
+                    if (checkResetHistory != null)
+                    {
+                        var date = checkResetHistory?.last_reset_timeDate;
+                        var elapsed = DateTime.UtcNow - checkResetHistory?.last_reset_timeDate;
+                        Console.WriteLine(checkResetHistory);
+                        Console.WriteLine(date);
+                        Console.WriteLine(elapsed);
+
+                        if (checkResetHistory?.rate_limit < 3 && checkResetHistory.user_id == 0)
+                        {
+                            Console.WriteLine("your password reset limit exceed, please try again");
+                            return new ResetPasswordResponseDto
+                            {
+                                ErrorMessage = "your password reset limit exceed, please try again"
+                            };
+                        }
+                        else if (elapsed?.TotalMinutes < 60)
+                        {
+                            Console.WriteLine("please try in another hour, you can reset only one time  in each 4hour");
+                            return new ResetPasswordResponseDto
+                            {
+                                ErrorMessage = "please try in another hour, you can reset only one time  in each 4hour"
+                            };
+                        }
+                        else
+                        {
+
+                            return new ResetPasswordResponseDto
+                            {
+                                SuccessMessage = "User found?"
+                            };
+                        }
+
+                        Console.WriteLine(message.SuccessMessage = isUserExist.email);
+                    }
+                    else
+                    {
+                        Console.WriteLine("NOO USERFOUND");
+                    }
 
 
-            var isUserExist = await _context.User.FirstOrDefaultAsync(u => u.email == request.email);
+                }
+                else
+                {
+                    Console.WriteLine(message.SuccessMessage = isUserExist.email);
+                }
 
-            var message = new ResetPasswordResponseDto();
-            if (isUserExist != null)
+
+
+
+
+            }
+            catch (Exception ex)
             {
 
-                var checkResetHistory = await _context.ResetPassword.FirstOrDefaultAsync(u => u.user_id != 0);
-
-                var date = checkResetHistory?.last_reset_timeDate;
-                var elapsed = DateTime.UtcNow - checkResetHistory?.last_reset_timeDate;
-                Console.WriteLine(checkResetHistory);
-                Console.WriteLine(date);
-                Console.WriteLine(elapsed);
-
-                if (checkResetHistory?.rate_limit < 3 && checkResetHistory.user_id == 0)
-                {
-                    Console.WriteLine("your password reset limit exceed, please try again");
-                }
-                else if (elapsed?.TotalMinutes < 60)
-                {
-                    Console.WriteLine("please try in another hour, you can reset only one time  in each 4hour");
-                }
-                Console.WriteLine(message.SuccessMessage = isUserExist.email);
+                Console.WriteLine(ex);
             }
+            {
+                return new ResetPasswordResponseDto
+                {
+                    email = request.email
+                };
 
-            return null;
 
+
+            }
         }
     }
 }
+
