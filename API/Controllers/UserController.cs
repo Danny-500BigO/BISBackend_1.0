@@ -108,17 +108,14 @@ namespace BakeryApi.API.Controllers
             {
                 // Console.WriteLine();
 
-                if(email != null)
+                if(email == null)
             {
 
-                var resetPassword =  await _userService.ResetPasswordAsync(email);
-
-                Console.WriteLine(resetPassword);
-
-               
-                
+                return BadRequest("please enter the email");
             } 
-            return BadRequest("ResetPasswordResponseDto");
+            var resetPassword =  await _userService.ResetPasswordAsync(email);
+
+            return resetPassword;
             }catch(Exception ex)
             {
                 Console.WriteLine($"ERROR: {ex.Message}");

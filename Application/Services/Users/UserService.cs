@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Net.WebSockets;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
+using BakeryApi.Application.Services.Email;
 using BakeryApi.Domain.Entities;
 using BakeryApi.Infrastructure.Data;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
@@ -18,6 +19,8 @@ namespace BakeryApi.Application.Services.Users
         private byte saltPassword;
         private IPasswordHasher<User> _passwordhasher;
         private readonly JwtService _jwtService;
+
+        private readonly EmailService _emailservice;
 
         public UserService(BakeryDbContext context, IPasswordHasher<User> passwordHasher, JwtService jwtService)
         {
@@ -165,18 +168,41 @@ namespace BakeryApi.Application.Services.Users
                             };
                         }
 
-                        Console.WriteLine(message.SuccessMessage = isUserExist.email);
+
                     }
                     else
                     {
-                        Console.WriteLine("NOO USERFOUND");
+
+                        //start from here
+
+                        byte[] tokenBytes = RandomNumberGenerator.GetBytes(32);
+
+                        string token = Convert.ToBase64String(tokenBytes)
+                            .TrimEnd('=')
+                            .Replace('+', '-')
+                            .Replace('/', '_');
+
+                           
+                           await _emailservice.SendEmailConfirmationAsync(
+                            token,
+                            request.email
+                        );
+                        // return new ResetPasswordResponseDto
+                        // {
+                        //     ErrorMessage = token
+                        // };
+
                     }
 
 
                 }
                 else
                 {
-                    Console.WriteLine(message.SuccessMessage = isUserExist.email);
+                   return new ResetPasswordResponseDto
+            {
+                ErrorMessage = "User Not found",
+                email = request.email
+            };
                 }
 
 
@@ -187,17 +213,15 @@ namespace BakeryApi.Application.Services.Users
             catch (Exception ex)
             {
 
-                Console.WriteLine(ex);
+                Console.WriteLine(ex.Message);
             }
+return new ResetPasswordResponseDto
             {
-                return new ResetPasswordResponseDto
-                {
-                    email = request.email
-                };
+                SuccessMessage = "Reset Success",
+                email = request.email
+            };
+            
 
-
-
-            }
         }
     }
 }

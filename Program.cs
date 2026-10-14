@@ -7,6 +7,8 @@ using BakeryAPI.Common.Converters;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using BakeryApi.Application.Services.Email;
+using BakeryApi.Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 var key = Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"]);
@@ -57,7 +59,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
-
+builder.Services.AddScoped<IEmailService, EmailService>();
 // Enable console logging
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
