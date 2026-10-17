@@ -10,7 +10,7 @@ namespace BakeryApi.Application.Services.Users
         Task<UserResponseDto?> AddUserAsync(UserRequestDto user);
         Task<User> GetUserByIdAsync(int id);
         Task<LoginResponseDto?> LoginAsync(LoginRequest request);
-        Task<ResetPasswordResponseDto?>ResetPasswordAsync(ResetPasswordRequestDto request);
+        Task<ResetPasswordResponseDto?>SendResetEmailAsync(ResetPasswordRequestDto request);
 
     }
 

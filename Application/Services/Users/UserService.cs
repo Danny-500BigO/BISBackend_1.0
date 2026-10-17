@@ -20,13 +20,16 @@ namespace BakeryApi.Application.Services.Users
         private IPasswordHasher<User> _passwordhasher;
         private readonly JwtService _jwtService;
 
-        private readonly EmailService _emailservice;
+        private readonly IEmailService _emailservice;
+        private readonly ILogger<UserService> _logger;
 
-        public UserService(BakeryDbContext context, IPasswordHasher<User> passwordHasher, JwtService jwtService)
+        public UserService(BakeryDbContext context, IPasswordHasher<User> passwordHasher, JwtService jwtService,ILogger<UserService> logger, IEmailService emailService)
         {
             _context = context;
             _passwordhasher = passwordHasher;
             _jwtService = jwtService;
+            _logger = logger;
+            _emailservice = emailService;
         }
 
         //Register new user
@@ -123,27 +126,28 @@ namespace BakeryApi.Application.Services.Users
             };
         }
 
-        public async Task<ResetPasswordResponseDto> ResetPasswordAsync(ResetPasswordRequestDto request)
+        public async Task<ResetPasswordResponseDto> SendResetEmailAsync(ResetPasswordRequestDto request)
         {
 
             try
             {
+                //check the requesting user exixsting  in  the database
                 var isUserExist = await _context.User.FirstOrDefaultAsync(u => u.email == request.email);
 
-                var message = new ResetPasswordResponseDto();
+                //if results null it goeserror message user not found
                 if (isUserExist != null)
                 {
 
+                    //get the ratelimit values from datatabse
                     var checkResetHistory = await _context.ResetPassword.FirstOrDefaultAsync(u => u.user_id == isUserExist.user_id);
+
                     if (checkResetHistory != null)
                     {
-                        var date = checkResetHistory?.last_reset_timeDate;
+                        
                         var elapsed = DateTime.UtcNow - checkResetHistory?.last_reset_timeDate;
-                        Console.WriteLine(checkResetHistory);
-                        Console.WriteLine(date);
-                        Console.WriteLine(elapsed);
 
-                        if (checkResetHistory?.rate_limit < 3 && checkResetHistory.user_id == 0)
+                        
+                        if (checkResetHistory?.rate_limit > 3)
                         {
                             Console.WriteLine("your password reset limit exceed, please try again");
                             return new ResetPasswordResponseDto
@@ -151,7 +155,7 @@ namespace BakeryApi.Application.Services.Users
                                 ErrorMessage = "your password reset limit exceed, please try again"
                             };
                         }
-                        else if (elapsed?.TotalMinutes < 60)
+                        else if (elapsed.HasValue && elapsed?.TotalMinutes > 240)
                         {
                             Console.WriteLine("please try in another hour, you can reset only one time  in each 4hour");
                             return new ResetPasswordResponseDto
@@ -162,9 +166,23 @@ namespace BakeryApi.Application.Services.Users
                         else
                         {
 
-                            return new ResetPasswordResponseDto
+                            byte[] tokenBytes = RandomNumberGenerator.GetBytes(32);
+
+                        string token = Convert.ToBase64String(tokenBytes)
+                            .TrimEnd('=')
+                            .Replace('+', '-')
+                            .Replace('/', '_');
+
+                           
+                           await _emailservice.SendEmailConfirmationAsync(
+                            token,
+                            request.email
+                            
+                        );
+
+                         return new ResetPasswordResponseDto
                             {
-                                SuccessMessage = "User found?"
+                                ErrorMessage = "please try in another hour, you can reset only one time  in each 4hour"
                             };
                         }
 
@@ -181,16 +199,15 @@ namespace BakeryApi.Application.Services.Users
                             .TrimEnd('=')
                             .Replace('+', '-')
                             .Replace('/', '_');
-
-                           
+     
                            await _emailservice.SendEmailConfirmationAsync(
                             token,
                             request.email
                         );
-                        // return new ResetPasswordResponseDto
-                        // {
-                        //     ErrorMessage = token
-                        // };
+                         return new ResetPasswordResponseDto
+                            {
+                                ErrorMessage = "please try in another hour, you can reset only one time  in each 4hour"
+                            };
 
                     }
 
@@ -204,22 +221,15 @@ namespace BakeryApi.Application.Services.Users
                 email = request.email
             };
                 }
-
-
-
-
-
             }
             catch (Exception ex)
             {
 
-                Console.WriteLine(ex.Message);
+                   _logger.LogError(ex, "An error occurred during password reset");
+
+                   throw;
             }
-return new ResetPasswordResponseDto
-            {
-                SuccessMessage = "Reset Success",
-                email = request.email
-            };
+
             
 
         }
