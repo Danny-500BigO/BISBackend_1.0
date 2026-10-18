@@ -23,7 +23,7 @@ namespace BakeryApi.Application.Services.Users
         private readonly IEmailService _emailservice;
         private readonly ILogger<UserService> _logger;
 
-        public UserService(BakeryDbContext context, IPasswordHasher<User> passwordHasher, JwtService jwtService,ILogger<UserService> logger, IEmailService emailService)
+        public UserService(BakeryDbContext context, IPasswordHasher<User> passwordHasher, JwtService jwtService, ILogger<UserService> logger, IEmailService emailService)
         {
             _context = context;
             _passwordhasher = passwordHasher;
@@ -143,10 +143,10 @@ namespace BakeryApi.Application.Services.Users
 
                     if (checkResetHistory != null)
                     {
-                        
+
                         var elapsed = DateTime.UtcNow - checkResetHistory?.last_reset_timeDate;
 
-                        
+
                         if (checkResetHistory?.rate_limit > 3)
                         {
                             Console.WriteLine("your password reset limit exceed, please try again");
@@ -168,19 +168,19 @@ namespace BakeryApi.Application.Services.Users
 
                             byte[] tokenBytes = RandomNumberGenerator.GetBytes(32);
 
-                        string token = Convert.ToBase64String(tokenBytes)
-                            .TrimEnd('=')
-                            .Replace('+', '-')
-                            .Replace('/', '_');
+                            string token = Convert.ToBase64String(tokenBytes)
+                                .TrimEnd('=')
+                                .Replace('+', '-')
+                                .Replace('/', '_');
 
-                           
-                           await _emailservice.SendEmailConfirmationAsync(
-                            token,
-                            request.email
-                            
-                        );
 
-                         return new ResetPasswordResponseDto
+                            await _emailservice.SendEmailConfirmationAsync(
+                             token,
+                             request.email
+
+                         );
+
+                            return new ResetPasswordResponseDto
                             {
                                 ErrorMessage = "please try in another hour, you can reset only one time  in each 4hour"
                             };
@@ -199,15 +199,15 @@ namespace BakeryApi.Application.Services.Users
                             .TrimEnd('=')
                             .Replace('+', '-')
                             .Replace('/', '_');
-     
-                           await _emailservice.SendEmailConfirmationAsync(
-                            token,
-                            request.email
-                        );
-                         return new ResetPasswordResponseDto
-                            {
-                                ErrorMessage = "please try in another hour, you can reset only one time  in each 4hour"
-                            };
+
+                        await _emailservice.SendEmailConfirmationAsync(
+                         token,
+                         request.email
+                     );
+                        return new ResetPasswordResponseDto
+                        {
+                            ErrorMessage = "please try in another hour, you can reset only one time  in each 4hour"
+                        };
 
                     }
 
@@ -215,22 +215,22 @@ namespace BakeryApi.Application.Services.Users
                 }
                 else
                 {
-                   return new ResetPasswordResponseDto
-            {
-                ErrorMessage = "User Not found",
-                email = request.email
-            };
+                    return new ResetPasswordResponseDto
+                    {
+                        ErrorMessage = "User Not found",
+                        email = request.email
+                    };
                 }
             }
             catch (Exception ex)
             {
 
-                   _logger.LogError(ex, "An error occurred during password reset");
+                _logger.LogError(ex, "An error occurred during password reset");
 
-                   throw;
+                throw;
             }
 
-            
+
 
         }
     }

@@ -18,6 +18,8 @@ namespace BakeryApi.Application.Services.Email
             string token,
             string email)
         {
+
+
             var host = _configuration["EmailSettings:Host"]
                 ?? throw new InvalidOperationException(
                     "Email host is missing.");
@@ -76,10 +78,13 @@ namespace BakeryApi.Application.Services.Email
 
             using var client = new SmtpClient();
 
+            client.CheckCertificateRevocation = false;
             await client.ConnectAsync(
                 host,
                 port,
                 SecureSocketOptions.StartTls);
+
+        
 
             await client.AuthenticateAsync(username, password);
 
